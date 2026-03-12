@@ -55,9 +55,8 @@ void setup(){
 
   leftWheel.attach(MOTOR_L);
   rightWheel.attach(MOTOR_R);
-  Serial.begin(9600);     
-  
   while(digitalRead(BUTTON) == LOW){
+    
     digitalWrite(GRN, HIGH);
     delay(125);
     digitalWrite(GRN, LOW);
@@ -94,11 +93,10 @@ void loop() {
 
   led_direction(error);
 
-  Serial.println(distance);
   if(distance >= 1300){
     deltaL = 0;
-    deltaR = 0;
   }
+  deltaR = 0;
 
   runMotors(deltaL, deltaR);
 }
