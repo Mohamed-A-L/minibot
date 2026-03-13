@@ -1,8 +1,11 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
-void turnOnLED(int COLOUR);
+extern const int red;
+extern const int grn;
+extern const int ylw;
+
 void runMotors(int deltaL, int deltaR);
 void led_direction(int error);
 
-#endif
+#endif // HELPERS_H

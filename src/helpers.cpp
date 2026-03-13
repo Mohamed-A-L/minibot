@@ -2,35 +2,31 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-extern const int GRN;
-extern const int YLW;
-extern const int RED;
-extern const int stopPulse;
+const int red = 10;
+const int grn = 9;
+const int ylw = 5;
+static const int stopPulse = 1530;
 extern Servo leftWheel;
 extern Servo rightWheel;
 
-void turnOnLED(int COLOUR) {
-  digitalWrite(GRN, LOW);
-  digitalWrite(YLW, LOW);
-  digitalWrite(RED, LOW);
-  digitalWrite(COLOUR, HIGH);
+static void turn_on_led(int colour) {
+  digitalWrite(grn, LOW);
+  digitalWrite(ylw, LOW);
+  digitalWrite(red, LOW);
+  digitalWrite(colour, HIGH);
 }
 
 void runMotors(int deltaL, int deltaR) {
-  int pulseL = (stopPulse + deltaL) * 10;
-  int pulseR = (stopPulse + deltaR) * 10;
-  leftWheel.writeMicroseconds(pulseL);
-  rightWheel.writeMicroseconds(pulseR);
+  leftWheel.writeMicroseconds(stopPulse + deltaL);
+  rightWheel.writeMicroseconds(stopPulse + deltaR);
 }
 
 void led_direction(int error) {
-  if(error > 200){  // correct to left
-    turnOnLED(RED);
-  }
-  else if(error < -200){ // correct to right
-    turnOnLED(YLW);
-  }
-  else{
-    turnOnLED(GRN);
+  if (error > 200) {
+    turn_on_led(red);
+  } else if (error < -200) {
+    turn_on_led(ylw);
+  } else {
+    turn_on_led(grn);
   }
 }
