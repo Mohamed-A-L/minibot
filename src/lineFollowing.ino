@@ -12,6 +12,10 @@
 Servo leftWheel;
 Servo rightWheel;
 
+int deltaL;
+int deltaR;
+int error;
+
 const int button = 7;
 
 const int motorR = 3;
@@ -34,6 +38,8 @@ unsigned long lastTime = 0;
 int lastError = 0;
 
 void setup() {
+Serial.begin(9600);
+
   pinMode(grn, OUTPUT);
   pinMode(ylw, OUTPUT);
   pinMode(red, OUTPUT);
@@ -72,20 +78,24 @@ void loop() {
   }
 
   unsigned long currentTime = millis();
-  if (currentTime - lastTime < PID_INTERVAL) return;
+  if (currentTime - lastTime < PID_INTERVAL) {
+    error = lvalue - rvalue;
+    const float dt = PID_INTERVAL / 1000.0;
+    float derivative = (error - lastError) / dt;
+    float correction = (kp * error) + (kd * derivative);
 
-  int error = lvalue - rvalue;
-  const float dt = PID_INTERVAL / 1000.0;
-  float derivative = (error - lastError) / dt;
-  float correction = (kp * error) + (kd * derivative);
+    lastError = error;
+    lastTime += PID_INTERVAL;
 
-  lastError = error;
-  lastTime += PID_INTERVAL;
+    deltaL = constrain(delta + (int)correction, -MAX_DELTA, MAX_DELTA);
+    deltaR = constrain(delta - (int)correction, -MAX_DELTA, MAX_DELTA);
+    Serial.print("correction:");
+    Serial.println(correction);
+    Serial.println(deltaL);
+    Serial.println(deltaR);
+  }
 
-  int deltaL = constrain(delta + (int)correction, 0, MAX_DELTA);
-  int deltaR = constrain(delta - (int)correction, 0, MAX_DELTA);
-
-  led_direction(error);
+    led_direction(error);
 
   if (distance >= 1300) {
     deltaL = 0;
