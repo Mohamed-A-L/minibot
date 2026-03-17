@@ -29,7 +29,7 @@ int lvalue = 0;
 int rvalue = 0;
 int distance = 0;
 
-int delta = 8;
+int delta = 10;
 
 const float kp = 0.0035;
 const float kd = 0.0000045;
@@ -74,11 +74,10 @@ void loop() {
     delay(TURN_DURATION);
     runMotors(0, 0);
     lastTime = millis();
-    return;
   }
 
   unsigned long currentTime = millis();
-  if (currentTime - lastTime < PID_INTERVAL) {
+  if (currentTime - lastTime > PID_INTERVAL) {
     error = lvalue - rvalue;
     const float dt = PID_INTERVAL / 1000.0;
     float derivative = (error - lastError) / dt;
@@ -87,15 +86,15 @@ void loop() {
     lastError = error;
     lastTime += PID_INTERVAL;
 
-    deltaL = constrain(delta + (int)correction, -MAX_DELTA, MAX_DELTA);
-    deltaR = constrain(delta - (int)correction, -MAX_DELTA, MAX_DELTA);
+    deltaL = constrain(delta + (int)correction, 0, MAX_DELTA);
+    deltaR = constrain(delta - (int)correction, 0, MAX_DELTA);
     Serial.print("correction:");
     Serial.println(correction);
     Serial.println(deltaL);
     Serial.println(deltaR);
   }
 
-    led_direction(error);
+  led_direction(error);
 
   if (distance >= 1300) {
     deltaL = 0;
