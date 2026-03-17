@@ -5,7 +5,7 @@
 const int red = 10;
 const int grn = 9;
 const int ylw = 5;
-static const int stopPulse = 153;
+static const int stopPulse = 155;
 extern Servo leftWheel;
 extern Servo rightWheel;
 
