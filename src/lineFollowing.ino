@@ -32,8 +32,8 @@ int distance = 0;
 int delta = 3;
 
 const float kp = 0.0025;
-const float kd = 0.000008;
-const float dFilter = 0.9;   // 0=max filtering, 1=no filtering
+const float kd = 0.000015;
+const float dFilter = 0.7;   // 0=max filtering, 1=no filtering
 
 unsigned long lastTime = 0;
 float lastError = 0;
@@ -78,7 +78,7 @@ void loop() {
   // }
 
   unsigned long currentTime = millis();
-  if (currentTime - lastTime >= PID_INTERVAL) {
+  if (currentTime - lastTime > PID_INTERVAL) {
     error = lvalue - rvalue;
     float dt = (currentTime - lastTime) / 1000.0;
     float Derivative = (error - lastError) / dt;
