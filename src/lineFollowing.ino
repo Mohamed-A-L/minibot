@@ -7,6 +7,10 @@
 Servo leftWheel;
 Servo rightWheel;
 
+int error;
+int deltaL;
+int deltaR;
+
 extern const int RED = 10;
 extern const int GRN = 9;
 extern const int YLW = 5;
@@ -72,9 +76,9 @@ void loop() {
   distance = map(analogRead(SHARP), 0, 1023, 0, 3300);
 
   unsigned long currentTime = millis();
-  if(currentTime - lastTime < PID_INTERVAL) return;
+  if(currentTime - lastTime > PID_INTERVAL) {
 
-  int error = lvalue - rvalue;
+  error = lvalue - rvalue;
   const float dt = PID_INTERVAL / 1000.0;
   float derivative = (error - lastError) / dt;
   integral += error * dt;
@@ -84,13 +88,14 @@ void loop() {
   lastError = error;
   lastTime += PID_INTERVAL;
 
-  int deltaL = Delta + (int)correction;
-  int deltaR = Delta - (int)correction;
+  deltaL = Delta + (int)correction;
+  deltaR = Delta - (int)correction;
 
   //Motor Speed Cap
   deltaL = constrain(deltaL, 0, MAX_DELTA);
   deltaR = constrain(deltaR, 0, MAX_DELTA);
   integral = constrain(integral, -500, 500);
+  }
 
   led_direction(error);
 
