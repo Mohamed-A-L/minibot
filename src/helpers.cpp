@@ -5,7 +5,7 @@
 const int red = 10;
 const int grn = 9;
 const int ylw = 5;
-static const int stopPulse = 1530;
+static const int stopPulse = 153;
 extern Servo leftWheel;
 extern Servo rightWheel;
 
@@ -17,8 +17,8 @@ static void turn_on_led(int colour) {
 }
 
 void runMotors(int deltaL, int deltaR) {
-  leftWheel.writeMicroseconds(stopPulse + deltaL);
-  rightWheel.writeMicroseconds(stopPulse + deltaR);
+  leftWheel.writeMicroseconds((stopPulse + deltaL) * 10);
+  rightWheel.writeMicroseconds((stopPulse + deltaR) * 10);
 }
 
 void led_direction(int error) {

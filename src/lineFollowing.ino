@@ -2,7 +2,7 @@
 #include <Servo.h>
 #include "helpers.h"
 
-#define MAX_DELTA 15
+#define MAX_DELTA 14
 #define PID_INTERVAL 10
 
 #define INTERSECT_THRESHOLD 2200
@@ -29,7 +29,7 @@ int lvalue = 0;
 int rvalue = 0;
 int distance = 0;
 
-int delta = 10;
+int delta = 7;
 
 const float kp = 0.0035;
 const float kd = 0.0000045;
