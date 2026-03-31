@@ -11,6 +11,8 @@
 
 Servo leftWheel;
 Servo rightWheel;
+Servo liftServo;
+Servo bucketServo;
 int servoPinB = 12;     // Bucket servomotor #2 pin
 int servoPinA = 11;     // Bucket servomotor #1 pin
 
@@ -36,14 +38,24 @@ int Delta = 8;
 const int offset = 1;
 
 //plugged in values
-const float Kp = 0.0035;
-const float Kd = 0.0000055;
+const float Kp = 0.0032;
+const float Kd = 0.000007;
 
 int lastError = 0;
-bool dir = 0;
 float laps = 0;
 bool stopNext = false;
 long currentTime = 0;
+
+int Alow = 160;    // initial angle
+int Blow = 86;
+
+int Ahigh = 115;     // highest angle
+int Bhigh = 92;
+
+int Bdump = 135;
+
+int currentPosA = Alow;
+int currentPosB = Blow;
 
 
 void setup(){
@@ -60,13 +72,9 @@ void setup(){
   leftWheel.attach(MOTOR_L);
   rightWheel.attach(MOTOR_R);
   Serial.begin(9600);
-
-  // myServoA.attach(servoPinA);
-  // myServoA.write(posA);
-  // myServoB.attach(servoPinB);
-  // myServoB.write(Blow);
-  // myServoA.detach(servoPinA);
-  // myServoB.detach(servoPinB);
+  
+  moveLift(1);
+  moveBucket(1);
 
   while(digitalRead(BUTTON) == LOW){
     digitalWrite(GRN, HIGH);
@@ -79,7 +87,7 @@ void setup(){
 
 void loop() {
   distance = map(analogRead(SHARP), 0, 1023, 0, 3300);
-  turn(dir);
+  turn();
 
   error = getError();
 
@@ -88,8 +96,8 @@ void loop() {
 
   lastError = error;
 
-  deltaL = Delta + (int)correction;
-  deltaR = Delta - (int)correction;
+  deltaL = (int)(Delta + correction);
+  deltaR = (int)(Delta - correction);
 
   //Motor Speed Cap
   deltaL = constrain(deltaL, 0, MAX_DELTA);
