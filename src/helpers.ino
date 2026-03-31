@@ -14,7 +14,7 @@ void runMotors(int deltaL, int deltaR)
 }
 
 void turn(){
-  if (lvalue > BLACK && rvalue > BLACK) {
+  if (lvalue > BLACK && rvalue > BLACK && (millis() - lastTurn > 2000)) {
     runMotors(Delta, Delta + offset);
     delay(80);
 
@@ -38,6 +38,7 @@ void turn(){
     lastError = error;
     runMotors(0, 0);
     delay(1000);
+    lastTurn = millis();
   }
 
   else if (distance > 1300) {
@@ -45,17 +46,17 @@ void turn(){
     runMotors(0, 0);
     delay(100);
 
-    runMotors(-(TURN_SPEED + 7), (TURN_SPEED + offset));
-    delay(1260);
+    runMotors(-(TURN_SPEED + backOffset), (TURN_SPEED + offset));
+    delay(1310);
 
     if(getError() > 0){
-      while(getError() > 0){
-        runMotors((TURN_SPEED), -(TURN_SPEED + offset)/2);
+      while(getError() > 100 || (lvalue > BLACK && rvalue > BLACK)){
+        runMotors((TURN_SPEED)/2, -(TURN_SPEED + offset + backOffset)/2);
       }
     }
     else if (getError() < 0){
-      while(getError() < 0){
-        runMotors(-(TURN_SPEED), (TURN_SPEED + offset)/2);
+      while(getError() < 100 || (lvalue > BLACK && rvalue > BLACK)){
+        runMotors(-(TURN_SPEED + backOffset)/2, (TURN_SPEED + offset)/2);
       }
     }
     laps = laps + 0.5;
@@ -68,15 +69,18 @@ void turn(){
     if(fmod(laps, 1) == 0.5){ // pickup
       moveLift(0);
       delay(250);
-      runMotors(-(Delta + 7)/2, -(Delta + offset + 7)/2);
-      delay(2700);
+      runMotors(-(Delta + backOffset)/2, -(Delta + offset + backOffset)/2);
+      delay(2800);
       runMotors(0, 0);
       delay(250);
       moveLift(1);
+      runMotors((Delta)/2, (Delta + offset)/2);
+      delay(2600);
+      lastTurn = millis();
     }
     else{
       delay(250);
-      runMotors(-(Delta + 7)/2, -(Delta + offset + 7)/2);
+      runMotors(-(Delta + backOffset)/2, -(Delta + offset + backOffset)/2);
       delay(2700);
       runMotors(0, 0);
       delay(250);
@@ -84,8 +88,12 @@ void turn(){
       delay(700);
       moveBucket(1);
       delay(250);
+      runMotors((Delta)/2, (Delta + offset)/2);
+      delay(2500);
+      lastTurn = millis();
     }
   }
+
 }
 
 void moveLift (bool liftState){

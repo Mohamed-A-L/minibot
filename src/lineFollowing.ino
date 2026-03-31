@@ -39,7 +39,7 @@ const int offset = 1;
 
 //plugged in values
 const float Kp = 0.0032;
-const float Kd = 0.000007;
+const float Kd = 0.00001;
 
 int lastError = 0;
 float laps = 0;
@@ -57,6 +57,9 @@ int Bdump = 135;
 int currentPosA = Alow;
 int currentPosB = Blow;
 
+unsigned long lastTurn = millis();
+int backOffset = 8;
+
 
 void setup(){
   pinMode(GRN, OUTPUT);
@@ -72,7 +75,7 @@ void setup(){
   leftWheel.attach(MOTOR_L);
   rightWheel.attach(MOTOR_R);
   Serial.begin(9600);
-  
+
   moveLift(1);
   moveBucket(1);
 
