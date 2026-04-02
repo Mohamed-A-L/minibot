@@ -108,7 +108,10 @@ void loop() {
 
 
   led_direction(error);
-  runMotors(deltaL, deltaR);
+  if (laps < 2){
+    runMotors(deltaL, deltaR);
+  }
+  else runMotors(0,0);
 
   if(millis() - currentTime > 10000 && stopNext == true){
     while(true){

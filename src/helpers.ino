@@ -42,56 +42,58 @@ void turn(){
   }
 
   else if (distance > 1300) {
-
     runMotors(0, 0);
     delay(100);
-
-    runMotors(-(TURN_SPEED + backOffset), (TURN_SPEED + offset));
-    delay(1310);
-
-    if(getError() > 0){
-      while(getError() > 100 || (lvalue > BLACK && rvalue > BLACK)){
-        runMotors((TURN_SPEED)/2, -(TURN_SPEED + offset + backOffset)/2);
-      }
-    }
-    else if (getError() < 0){
-      while(getError() < 100 || (lvalue > BLACK && rvalue > BLACK)){
-        runMotors(-(TURN_SPEED + backOffset)/2, (TURN_SPEED + offset)/2);
-      }
-    }
     laps = laps + 0.5;
 
-    error = getError();
-    lastError = error;
-    runMotors(0, 0);
-    delay(1000);
-
     if(fmod(laps, 1) == 0.5){ // pickup
+      runMotors(-(TURN_SPEED + backOffset), (TURN_SPEED + offset));
+      delay(1380); //SHORT TURN TIME
+      runMotors(0, 0);
+      delay(500);
       moveLift(0);
       delay(250);
       runMotors(-(Delta + backOffset)/2, -(Delta + offset + backOffset)/2);
-      delay(2800);
+      delay(4000);
       runMotors(0, 0);
       delay(250);
-      moveLift(1);
       runMotors((Delta)/2, (Delta + offset)/2);
-      delay(2600);
-      lastTurn = millis();
+      delay(400);
+      moveLift(1);
+      while(rvalue < BLACK){
+        getError();
+        runMotors((Delta + 4)/2, (Delta + offset)/2);
+      }
+      runMotors(0, 0);
+      delay(1000);
     }
     else{
+      runMotors(-(TURN_SPEED + backOffset), (TURN_SPEED + offset));
+      delay(1425); //LONG TURN TIME
+      runMotors(0, 0);
       delay(250);
       runMotors(-(Delta + backOffset)/2, -(Delta + offset + backOffset)/2);
-      delay(2700);
+      delay(3200);
       runMotors(0, 0);
       delay(250);
       moveBucket(0);
       delay(700);
       moveBucket(1);
       delay(250);
-      runMotors((Delta)/2, (Delta + offset)/2);
-      delay(2500);
-      lastTurn = millis();
+      while(rvalue > BLACK){
+        getError();
+        runMotors((Delta)/2, (Delta + offset)/2);
+      }
+      while(rvalue < BLACK){
+        getError();
+        runMotors((Delta + 4)/2, (Delta + offset)/2);
+      }
+      runMotors(0, 0);
+      delay(1000);
     }
+    error = getError();
+    lastError = error;
+    lastTurn = millis();
   }
 
 }
