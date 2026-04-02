@@ -48,7 +48,7 @@ void turn(){
 
     if(fmod(laps, 1) == 0.5){ // pickup
       runMotors(-(TURN_SPEED + backOffset), (TURN_SPEED + offset));
-      delay(1380); //SHORT TURN TIME
+      delay(1390); //SHORT TURN TIME
       runMotors(0, 0);
       delay(500);
       moveLift(0);
@@ -58,7 +58,7 @@ void turn(){
       runMotors(0, 0);
       delay(250);
       runMotors((Delta)/2, (Delta + offset)/2);
-      delay(400);
+      delay(150);
       moveLift(1);
       while(rvalue < BLACK){
         getError();
@@ -69,11 +69,11 @@ void turn(){
     }
     else{
       runMotors(-(TURN_SPEED + backOffset), (TURN_SPEED + offset));
-      delay(1425); //LONG TURN TIME
+      delay(1435); //LONG TURN TIME
       runMotors(0, 0);
       delay(250);
       runMotors(-(Delta + backOffset)/2, -(Delta + offset + backOffset)/2);
-      delay(3200);
+      delay(2900);
       runMotors(0, 0);
       delay(250);
       moveBucket(0);
